@@ -82,9 +82,6 @@ awful.layout.layouts = {
 }
 -- }}}
 
--- setup resolution on startup
-awful.util.spawn("xrandr -s 1920x1200")
-
 -- {{{ Menu
 -- Create a launcher widget and a main menu
 myawesomemenu = {
@@ -230,6 +227,8 @@ awful.screen.connect_for_each_screen(function(s)
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
             mykeyboardlayout,
+            -- require("battery_wgt") {},
+            require("battery_wgt") {},
             wibox.widget.systray(),
             mytextclock,
             s.mylayoutbox,

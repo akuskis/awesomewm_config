@@ -147,8 +147,9 @@ function battery_wgt:init(args)
     self.widget_text = "${AC_BAT}${color_on}${percent}%${color_off}"
     self.tooltip_text = "Battery ${state}${time_estimated}\nCapacity: ${capacity_percent}%"
 
-    self.alert_threshold = 5
+    self.alert_threshold = 10
     self.alert_text = "${AC_BAT}${time_estimated}"
+    self.low_battery_notified = false
 
     self.widget = wibox.widget.textbox()
     self.widget.font = args.widget_font
@@ -219,13 +220,13 @@ function battery_wgt:update()
 
     -- AC/battery prefix
     ctx.AC_BAT  = (ctx.ac_state == 1
-                   and lookup_by_limits(self.ac_prefix, ctx.percent)
-                   or lookup_by_limits(self.battery_prefix, ctx.percent)
-                   or "Err!")
+            and lookup_by_limits(self.ac_prefix, ctx.percent)
+            or lookup_by_limits(self.battery_prefix, ctx.percent)
+            or "Err!")
 
     -- Colors
     ctx.color_on, ctx.color_off = color_tags(
-        lookup_by_limits(self.percent_colors, ctx.percent))
+            lookup_by_limits(self.percent_colors, ctx.percent))
 
     -- estimate time
     ctx.charge_direction = constants.static
@@ -247,8 +248,8 @@ function battery_wgt:update()
         ctx.hours   = math.floor((ctx.time_left))
         ctx.minutes = math.floor((ctx.time_left - ctx.hours) * 60)
         if ctx.hours > 0
-            then ctx.time_text = ctx.hours .. "h " .. ctx.minutes .. "m"
-            else ctx.time_text =                      ctx.minutes .. "m"
+        then ctx.time_text = ctx.hours .. "h " .. ctx.minutes .. "m"
+        else ctx.time_text =                      ctx.minutes .. "m"
         end
         ctx.time_estimated = ": " .. ctx.time_text .. " remaining"
     end
@@ -265,17 +266,24 @@ function battery_wgt:update()
     -- notifications
     if (ctx.charge_direction == constants.discharging and ctx.percent and ctx.percent <= self.alert_threshold)
     then
-        self:notify_low_battery(substitute(self.alert_text, ctx))
+        if not self.low_battery_notified
+        then
+            self:notify_low_battery(substitute(self.alert_text, ctx))
+        end
+    else
+        self.low_battery_notified = false
     end
 end
 
 function battery_wgt:notify_low_battery(text)
     naughty.notify({
         title = "Critically low battery!",
+        icon = "/home/waster/Downloads/no_energy.jpg",
         text = text,
         preset = naughty.config.presets.critical,
         timeout = 10
     })
+    self.low_battery_notified = true
 end
 
 return setmetatable(battery_wgt, {

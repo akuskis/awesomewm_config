@@ -1,3 +1,6 @@
 [submodule "battery-widget"]
 	path = battery-widget
 	url = git@github.com:akuskis/battery-widget.git
+[submodule "awesome-wm-widgets"]
+	path = widgets
+	url = git@github.com:akuskis/awesome-wm-widgets.git

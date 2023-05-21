@@ -56,6 +56,13 @@ local battery_widget = require("battery-widget") {
     warn_full_battery = true,
 }
 
+-- volume widget
+local volume_widget = require('widgets.volume-widget.volume'){
+    widget_type = 'arc',
+    icon = gears.filesystem.get_configuration_dir() .. "widgets/volume-widget/icons/audio-volume-high-symbolic.svg",
+    size = 26,
+}
+
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
@@ -235,7 +242,7 @@ awful.screen.connect_for_each_screen(function(s)
         s.mytasklist, -- Middle widget
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
-            mykeyboardlayout,
+            volume_widget,
             battery_widget,
             wibox.widget.systray(),
             mytextclock,

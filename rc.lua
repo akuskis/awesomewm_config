@@ -47,6 +47,15 @@ do
 end
 -- }}}
 
+-- battery widget
+local battery_widget = require("battery-widget") {
+    alert_threshold = 20,
+    alert_timeout = 20,
+    alert_icon = gears.filesystem.get_configuration_dir() .. "img/battery_discharged.png",
+    full_battery_icon = gears.filesystem.get_configuration_dir() .. "img/battery_charged.png",
+    warn_full_battery = true,
+}
+
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
@@ -227,8 +236,7 @@ awful.screen.connect_for_each_screen(function(s)
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
             mykeyboardlayout,
-            -- require("battery_wgt") {},
-            require("battery_wgt") {},
+            battery_widget,
             wibox.widget.systray(),
             mytextclock,
             s.mylayoutbox,
@@ -261,7 +269,6 @@ globalkeys = gears.table.join(
               {description = "view next", group = "tag"}),
     awful.key({ modkey,           }, "Escape", awful.tag.history.restore,
               {description = "go back", group = "tag"}),
-
     awful.key({ modkey,           }, "j",
         function ()
             awful.client.focus.byidx( 1)
@@ -276,7 +283,6 @@ globalkeys = gears.table.join(
     ),
     awful.key({ modkey,           }, "w", function () mymainmenu:show() end,
               {description = "show main menu", group = "awesome"}),
-
     -- Layout manipulation
     awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end,
               {description = "swap with next client by index", group = "client"}),
@@ -304,7 +310,6 @@ globalkeys = gears.table.join(
               {description = "reload awesome", group = "awesome"}),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit,
               {description = "quit awesome", group = "awesome"}),
-
     awful.key({ modkey,           }, "l",     function () awful.tag.incmwfact( 0.05)          end,
               {description = "increase master width factor", group = "layout"}),
     awful.key({ modkey,           }, "h",     function () awful.tag.incmwfact(-0.05)          end,

@@ -62,6 +62,8 @@ local volume_widget = volume_wgt{
     widget_type = 'arc',
     icon = gears.filesystem.get_configuration_dir() .. "widgets/volume-widget/icons/audio-volume-high-symbolic.svg",
     size = 26,
+    thickness = 3,
+    mute_color = "#ff0000ff",
 }
 
 -- {{{ Variable definitions

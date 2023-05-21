@@ -57,7 +57,8 @@ local battery_widget = require("battery-widget") {
 }
 
 -- volume widget
-local volume_widget = require('widgets.volume-widget.volume'){
+local volume_wgt = require('widgets.volume-widget.volume')
+local volume_widget = volume_wgt{
     widget_type = 'arc',
     icon = gears.filesystem.get_configuration_dir() .. "widgets/volume-widget/icons/audio-volume-high-symbolic.svg",
     size = 26,
@@ -268,6 +269,9 @@ globalkeys = gears.table.join(
         end,
         {description = "lock the screen", group = "awesome"}
     ),
+    awful.key({ modkey }, "]", function() volume_wgt:inc(5) end),
+    awful.key({ modkey }, "[", function() volume_wgt:dec(5) end),
+    awful.key({ modkey }, "\\", function() volume_wgt:toggle() end),
     awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
               {description="show help", group="awesome"}),
     awful.key({ modkey,           }, "Left",   awful.tag.viewprev,

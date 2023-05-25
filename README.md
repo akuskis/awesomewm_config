@@ -12,8 +12,13 @@ Wallpaper location: `~/.config/awesome/wallpaper.jpg`
 
 Screen locker: `xtrlock`
 
+Laptop screen brightness: `brightnessctl`
+
 ```bash
-sudo apt install xtrlock
+sudo apt install xtrlock brightnessctl
+
+# permissions to `brightnessctl`
+sudo gpasswd -a [USER_NAME] video
 ```
 
 ### Handle resolution

@@ -66,6 +66,18 @@ local volume_widget = volume_wgt{
     mute_color = "#ff0000ff",
 }
 
+-- brightness widget
+local brightness_wgt = require('widgets.brightness-widget.brightness')
+local brightness_widget = brightness_wgt{
+    icon_dir = gears.filesystem.get_configuration_dir() .. "widgets/brightness-widget/",
+    type = 'arc',
+    program = 'brightnessctl',
+    max_value = 400,  -- command `brightnessctl max`
+    step = 5,
+    thickness = 3,
+    size = 26,
+}
+
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
@@ -245,6 +257,7 @@ awful.screen.connect_for_each_screen(function(s)
         s.mytasklist, -- Middle widget
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
+            brightness_widget,
             volume_widget,
             wibox.widget.textbox(" "),
             battery_widget,
@@ -273,9 +286,16 @@ globalkeys = gears.table.join(
         end,
         {description = "lock the screen", group = "awesome"}
     ),
-    awful.key({ modkey }, "]", function() volume_wgt:inc(5) end),
-    awful.key({ modkey }, "[", function() volume_wgt:dec(5) end),
-    awful.key({ modkey }, "\\", function() volume_wgt:toggle() end),
+    awful.key({ modkey }, "]", function() volume_wgt:inc(5) end,
+            {description="Volume +", group="awesome"}),
+    awful.key({ modkey }, "[", function() volume_wgt:dec(5) end,
+            {description="Volume -", group="awesome"}),
+    awful.key({ modkey }, "\\", function() volume_wgt:toggle() end,
+            {description="Volume Mute", group="awesome"}),
+    awful.key({ modkey, "Shift" }, "]", function() brightness_wgt:inc() end,
+            {description="Brightness +", group="awesome"}),
+    awful.key({ modkey, "Shift" }, "[", function() brightness_wgt:dec() end,
+            {description="Brightness -", group="awesome"}),
     awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
               {description="show help", group="awesome"}),
     awful.key({ modkey,           }, "Left",   awful.tag.viewprev,

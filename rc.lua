@@ -78,6 +78,15 @@ local brightness_widget = brightness_wgt{
     size = 26,
 }
 
+-- calendar widget
+local calendar_widget = require('widgets.calendar-widget.calendar')({
+    placement = 'top_right',
+    theme = 'nord',
+    radius = 18,
+    previous_month_button = 1,
+    next_month_button = 3,
+})
+
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
@@ -155,6 +164,11 @@ mykeyboardlayout = awful.widget.keyboardlayout()
 -- {{{ Wibar
 -- Create a textclock widget
 mytextclock = wibox.widget.textclock()
+
+mytextclock:connect_signal("button::press",
+        function(_, _, _, button)
+            if button == 1 then calendar_widget.toggle() end
+        end)
 
 -- Create a wibox for each screen and add it
 local taglist_buttons = gears.table.join(
